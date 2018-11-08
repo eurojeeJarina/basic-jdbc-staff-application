@@ -115,8 +115,7 @@ public class Controller {
     private void insertNewStaff()
     {
 
-        dateOfBirthField.setVisible(false);
-        datePickerField.setVisible(true);
+
 
     }
 

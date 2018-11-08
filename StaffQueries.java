@@ -123,6 +123,7 @@ public class StaffQueries {
         try {
             if (results) {
                 // just do not do anything result is FALSE anyway
+                System.out.println(firstName + " is already in the database!");
             } else {
                 insertStatement.setString(1, firstName);
                 insertStatement.setString(2, lastName);
