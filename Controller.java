@@ -36,6 +36,8 @@ public class Controller {
     @FXML
     Button previousBtn;
     @FXML
+    Button nextBtn;
+    @FXML
     Button browseAllBtn;
 
 
@@ -51,13 +53,40 @@ public class Controller {
         if (e.getSource().equals(previousBtn)) {
             System.out.println("Previous Button here!");
 
-        } else if (e.getSource().equals(browseAllBtn)) {
+        } else if (e.getSource().equals(browseAllBtn)) { // If browse all btn is clicked
             displayStaff();
+        }else if(e.getSource().equals(nextBtn)) // If next btn is clicked
+        {
+            nextStaff();
         }
     }
+    private void nextStaff()
+    {
+
+        this.currentEntryIndex++;
+        // the current index is already at index[0]
+        // add 1 to the currentEntryIndex when the button is pressed
 
 
-    public void displayStaff() {
+        if(this.currentEntryIndex >= this.numberOfEntries)
+        {
+            // if the currentEntryIndex have reached the max number of entries
+            // subtract 1 from it to avoid the out of bounds exception
+            // and then disable the next button;
+            this.currentEntryIndex--;
+            nextBtn.setDisable(true);
+        }
+
+        indexField.setText((this.currentEntryIndex+1) + "");
+        displayCurrentStaff(this.currentEntryIndex);
+
+    }
+    private void previousStaff()
+    {
+
+    }
+
+    private void displayStaff() {
         try {
             staffArrayList = staffQueries.getAllStaff();
             numberOfEntries = staffArrayList.size();
@@ -82,9 +111,19 @@ public class Controller {
         } catch (Exception ex) {
             System.err.println("Problem with database connection.");
         }
-
-
     }
 
+    private void displayCurrentStaff(int index)
+    {
+        currentStaff = this.staffArrayList.get(index);
 
+        staffIdField.setText(currentStaff.getStaffId()+"");
+        firstNameField.setText(currentStaff.getFirstName());
+        lastNameField.setText(currentStaff.getLastName());
+        dateOfBirthField.setText(currentStaff.getDateOfBirth());
+        departmentField.setText(currentStaff.getDepartment());
+        salaryField.setText(currentStaff.getSalary()+"");
+        startDateField.setText(currentStaff.getStartDate());
+        fullTimeField.setText(currentStaff.isFullTime()+"");
+    }
 }
