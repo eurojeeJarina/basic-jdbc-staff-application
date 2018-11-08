@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 
@@ -32,6 +33,8 @@ public class Controller {
     TextField staffIdField, firstNameField, lastNameField, dateOfBirthField,
             departmentField, salaryField, startDateField, fullTimeField;
 
+    @FXML
+    TextField searchByFirstNameField, searchByLastNameField;
 
     // ALL BUTTONS DECLARED HERE
     @FXML
@@ -40,6 +43,8 @@ public class Controller {
     Button nextBtn;
     @FXML
     Button browseAllBtn;
+    @FXML
+    Button searchByNameBtn;
 
 
     @FXML
@@ -59,9 +64,18 @@ public class Controller {
         }else if(e.getSource().equals(nextBtn)) // If next btn is clicked
         {
             nextStaff();
-        }else if(e.getSource().equals(previousBtn))
-        {
+        }else if(e.getSource().equals(previousBtn)) {
             previousStaff();
+        }else if(e.getSource().equals(searchByNameBtn))
+        {
+            if(searchByFirstNameField.getText().isEmpty())
+            {
+                System.out.println("Empty Field");
+            }else
+            {
+                searchByNames(searchByFirstNameField.getText());
+            }
+
         }
     }
     @FXML
@@ -81,6 +95,38 @@ public class Controller {
         }catch (NumberFormatException ex){
             System.out.println("Please enter a valid number");
         }
+    }
+
+    private void searchByNames(String query)
+    {
+        try {
+
+            staffArrayList = staffQueries.searchStaff(query);
+            numberOfEntries = staffArrayList.size();
+
+            //System.out.println(numberOfEntries);
+
+            if(numberOfEntries != 0)
+            {
+                currentEntryIndex = 0;
+               currentStaff = staffArrayList.get(0);
+
+               displayCurrentStaff(currentEntryIndex);
+
+
+                maxIndexField.setText(numberOfEntries + "");
+                indexField.setText((currentEntryIndex+1) + "");
+            }else
+            {
+                System.out.println("Not found!");
+                displayStaff();
+            }
+
+        }catch (Exception e)
+        {
+
+        }
+
     }
 
     private void nextStaff()
@@ -146,6 +192,7 @@ public class Controller {
 
     private void displayCurrentStaff(int index)
     {
+
         currentStaff = this.staffArrayList.get(index);
 
         staffIdField.setText(currentStaff.getStaffId()+"");

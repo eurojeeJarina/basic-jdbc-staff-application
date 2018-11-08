@@ -16,7 +16,7 @@
         <Insets left="10" top="10"/>
     </padding>
 
-    <Button fx:id="previousBtn" text="Previous" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#onKeyPressed"/>
+    <Button fx:id="previousBtn" text="Previous" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#onButtonClicked"/>
     <TextField fx:id="indexField" GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="30" alignment="CENTER" onAction="#onKeyPressed"/>
     <TextField fx:id="maxIndexField" GridPane.rowIndex="0" GridPane.columnIndex="2" maxWidth="30" alignment="CENTER"
                editable="false"/>
@@ -69,9 +69,9 @@
     <Label fx:id="searchByLastName"   text="Last name" GridPane.rowIndex="2" GridPane.columnIndex="8"/>
     <TextField fx:id="searchByLastNameField" GridPane.rowIndex="3" GridPane.columnIndex="8" GridPane.columnSpan="3"/>
 
-    <Button fx:id="searchByNameBtn" text="Search" GridPane.rowIndex="3" GridPane.columnIndex="11"/>
+    <Button fx:id="searchByNameBtn" text="Search" GridPane.rowIndex="3" GridPane.columnIndex="11" onAction="#onButtonClicked"/>
 
-    <!--SEARCH BY FIRSTNAME AND LASTNAME-->
+    <!--SEARCH BY DEPARTMENT-->
     <Label text="Search By Department" GridPane.rowIndex="4" GridPane.columnIndex="5" style="-fx-font-weight: bold"/>
 
     <Label fx:id="searchByDepartment"  text="Department" GridPane.rowIndex="5" GridPane.columnIndex="5"/>
