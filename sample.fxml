@@ -16,8 +16,8 @@
         <Insets left="10" top="10"/>
     </padding>
 
-    <Button fx:id="previousBtn" text="Previous" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#onButtonClicked"/>
-    <TextField fx:id="indexField" GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="30" alignment="CENTER"/>
+    <Button fx:id="previousBtn" text="Previous" GridPane.rowIndex="0" GridPane.columnIndex="0" onAction="#onKeyPressed"/>
+    <TextField fx:id="indexField" GridPane.rowIndex="0" GridPane.columnIndex="1" maxWidth="30" alignment="CENTER" onAction="#onKeyPressed"/>
     <TextField fx:id="maxIndexField" GridPane.rowIndex="0" GridPane.columnIndex="2" maxWidth="30" alignment="CENTER"
                editable="false"/>
     <Button fx:id="nextBtn" text="Next" GridPane.rowIndex="0" GridPane.columnIndex="3" onAction="#onButtonClicked"/>

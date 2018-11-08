@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,7 @@ public class Controller {
 
     @FXML
     public void onButtonClicked(ActionEvent e) {
-        if (e.getSource().equals(previousBtn)) {
+        if (e.getSource().equals("")) {
             System.out.println("Previous Button here!");
 
         } else if (e.getSource().equals(browseAllBtn)) { // If browse all btn is clicked
@@ -58,8 +59,30 @@ public class Controller {
         }else if(e.getSource().equals(nextBtn)) // If next btn is clicked
         {
             nextStaff();
+        }else if(e.getSource().equals(previousBtn))
+        {
+            previousStaff();
         }
     }
+    @FXML
+    public void onKeyPressed(ActionEvent event)
+    {
+        try{
+           int inputIndex = Integer.parseInt(indexField.getText());
+
+           if(inputIndex < 1 || inputIndex > this.numberOfEntries)
+           {
+               System.out.println("Please enter number within range." );
+           }else
+           {
+                displayCurrentStaff(inputIndex-1);
+           }
+
+        }catch (NumberFormatException ex){
+            System.out.println("Please enter a valid number");
+        }
+    }
+
     private void nextStaff()
     {
 
@@ -73,8 +96,8 @@ public class Controller {
             // if the currentEntryIndex have reached the max number of entries
             // subtract 1 from it to avoid the out of bounds exception
             // and then disable the next button;
-            this.currentEntryIndex--;
-            nextBtn.setDisable(true);
+            this.currentEntryIndex = 0;
+
         }
 
         indexField.setText((this.currentEntryIndex+1) + "");
@@ -83,8 +106,16 @@ public class Controller {
     }
     private void previousStaff()
     {
+        this.currentEntryIndex--;
 
+        if(this.currentEntryIndex < 0)
+        {
+            this.currentEntryIndex = this.numberOfEntries-1;
+        }
+        indexField.setText((this.currentEntryIndex+1) + "");
+        displayCurrentStaff(this.currentEntryIndex);
     }
+
 
     private void displayStaff() {
         try {
