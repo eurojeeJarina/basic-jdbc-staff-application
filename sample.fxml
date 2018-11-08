@@ -8,6 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.DatePicker?>
 <GridPane fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT" hgap="10" vgap="10">
 
@@ -42,7 +43,8 @@
 
     <!--ROW #5 Date Of Birth-->
     <Label fx:id="dateOfBirthLabel" text="Date of Birth" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-    <TextField fx:id="dateOfBirthField" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+    <TextField fx:id="dateOfBirthField" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3" visible="true"/>
+    <DatePicker fx:id="datePickerField" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3" visible="false"/>
 
     <!--ROW #6 Department-->
     <Label fx:id="departmentLabel" text="Department" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
@@ -63,13 +65,13 @@
     <!--QUERY FIELD SECTION-->
     <!--SEARCH BY FIRSTNAME AND LASTNAME-->
     <Label text="Search By Name" GridPane.rowIndex="1" GridPane.columnIndex="5" style="-fx-font-weight: bold"/>
-    <Label fx:id="searchByFirstNameLabel"  text="First name" GridPane.rowIndex="2" GridPane.columnIndex="5"/>
+    <Label fx:id="searchByFirstNameLabel"  text="First or Last name" GridPane.rowIndex="2" GridPane.columnIndex="5"/>
     <TextField fx:id="searchByFirstNameField" GridPane.rowIndex="3" GridPane.columnIndex="5" GridPane.columnSpan="3"/>
 
-    <Label fx:id="searchByLastName"   text="Last name" GridPane.rowIndex="2" GridPane.columnIndex="8"/>
-    <TextField fx:id="searchByLastNameField" GridPane.rowIndex="3" GridPane.columnIndex="8" GridPane.columnSpan="3"/>
+    <!--<Label fx:id="searchByLastName"   text="Last name" GridPane.rowIndex="2" GridPane.columnIndex="8"/>-->
+    <!--<TextField fx:id="searchByLastNameField" GridPane.rowIndex="3" GridPane.columnIndex="8" GridPane.columnSpan="3"/>-->
 
-    <Button fx:id="searchByNameBtn" text="Search" GridPane.rowIndex="3" GridPane.columnIndex="11" onAction="#onButtonClicked"/>
+    <Button fx:id="searchByNameBtn" text="Search" GridPane.rowIndex="3" GridPane.columnIndex="8" onAction="#onButtonClicked"/>
 
     <!--SEARCH BY DEPARTMENT-->
     <Label text="Search By Department" GridPane.rowIndex="4" GridPane.columnIndex="5" style="-fx-font-weight: bold"/>
@@ -77,12 +79,12 @@
     <Label fx:id="searchByDepartment"  text="Department" GridPane.rowIndex="5" GridPane.columnIndex="5"/>
     <TextField fx:id="searchByDepartmentField" GridPane.rowIndex="6" GridPane.columnIndex="5" GridPane.columnSpan="3"/>
 
-    <Button fx:id="searchByDepartmentBtn" text="Search" GridPane.rowIndex="6" GridPane.columnIndex="8"/>
+    <Button fx:id="searchByDepartmentBtn" text="Search" GridPane.rowIndex="6" GridPane.columnIndex="8" onAction="#onButtonClicked"/>
 
     <!--BOTTOM SECTION-->
     <HBox GridPane.rowIndex="8" GridPane.columnIndex="5" GridPane.columnSpan="4" spacing="5" >
     <Button fx:id="browseAllBtn" text="View All" onAction="#onButtonClicked"/>
-    <Button fx:id="insertButton" text="Insert" />
+    <Button fx:id="insertButton" text="Insert" onAction="#onButtonClicked"/>
     <Button fx:id="updateButton" text="Update" />
     </HBox>
 

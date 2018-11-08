@@ -2,10 +2,15 @@ package sample;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.stage.Stage;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ public class Controller {
             departmentField, salaryField, startDateField, fullTimeField;
 
     @FXML
-    TextField searchByFirstNameField, searchByLastNameField;
+    TextField searchByFirstNameField, searchByDepartmentField;
 
     // ALL BUTTONS DECLARED HERE
     @FXML
@@ -45,6 +50,13 @@ public class Controller {
     Button browseAllBtn;
     @FXML
     Button searchByNameBtn;
+    @FXML
+    Button searchByDepartmentBtn;
+    @FXML
+    Button insertButton;
+
+    @FXML
+    DatePicker datePickerField;
 
 
     @FXML
@@ -61,57 +73,92 @@ public class Controller {
 
         } else if (e.getSource().equals(browseAllBtn)) { // If browse all btn is clicked
             displayStaff();
-        }else if(e.getSource().equals(nextBtn)) // If next btn is clicked
+        } else if (e.getSource().equals(nextBtn)) // If next btn is clicked
         {
             nextStaff();
-        }else if(e.getSource().equals(previousBtn)) {
+        } else if (e.getSource().equals(previousBtn)) {
             previousStaff();
-        }else if(e.getSource().equals(searchByNameBtn))
-        {
-            if(searchByFirstNameField.getText().isEmpty())
-            {
+        } else if (e.getSource().equals(searchByNameBtn)) {
+            if (searchByFirstNameField.getText().isEmpty()) {
                 System.out.println("Empty Field");
-            }else
-            {
+            } else {
                 searchByNames(searchByFirstNameField.getText());
             }
-
+        } else if (e.getSource().equals(searchByDepartmentBtn)) {
+            if (searchByDepartmentField.getText().isEmpty()) {
+                System.out.println("Empty Field");
+            } else {
+                searchByDepartment(searchByDepartmentField.getText());
+            }
+        }else if(e.getSource().equals(insertButton))
+        {
+            insertNewStaff();
         }
     }
+
     @FXML
-    public void onKeyPressed(ActionEvent event)
-    {
-        try{
-           int inputIndex = Integer.parseInt(indexField.getText());
+    public void onKeyPressed(ActionEvent event) {
+        try {
+            int inputIndex = Integer.parseInt(indexField.getText());
 
-           if(inputIndex < 1 || inputIndex > this.numberOfEntries)
-           {
-               System.out.println("Please enter number within range." );
-           }else
-           {
-                displayCurrentStaff(inputIndex-1);
-           }
+            if (inputIndex < 1 || inputIndex > this.numberOfEntries) {
+                System.out.println("Please enter number within range.");
+            } else {
+                displayCurrentStaff(inputIndex - 1);
+            }
 
-        }catch (NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             System.out.println("Please enter a valid number");
         }
     }
 
-    private void searchByNames(String query)
+    private void insertNewStaff()
     {
+
+        dateOfBirthField.setVisible(false);
+        datePickerField.setVisible(true);
+
+    }
+
+    private void searchByNames(String query) {
         try {
 
-            staffArrayList = staffQueries.searchStaff(query);
+            staffArrayList = staffQueries.searchStaff(query); // pass the parameter to the searchStaff() from staffQuerries Class
             numberOfEntries = staffArrayList.size();
 
             //System.out.println(numberOfEntries);
 
+            if (numberOfEntries != 0) {
+                currentEntryIndex = 0;
+                currentStaff = staffArrayList.get(0);
+
+                displayCurrentStaff(currentEntryIndex);
+
+
+                maxIndexField.setText(numberOfEntries + "");
+                indexField.setText((currentEntryIndex + 1) + "");
+            } else {
+                System.out.println("Not found!");
+                displayStaff();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void searchByDepartment(String query) {
+        try {
+
+            staffArrayList = staffQueries.searchStaffByDepartment(query);
+            numberOfEntries = staffArrayList.size();
+
             if(numberOfEntries != 0)
             {
                 currentEntryIndex = 0;
-               currentStaff = staffArrayList.get(0);
+                currentStaff = staffArrayList.get(0);
 
-               displayCurrentStaff(currentEntryIndex);
+                displayCurrentStaff(currentEntryIndex);
 
 
                 maxIndexField.setText(numberOfEntries + "");
@@ -124,21 +171,18 @@ public class Controller {
 
         }catch (Exception e)
         {
-
+            e.printStackTrace();
         }
-
     }
 
-    private void nextStaff()
-    {
+    private void nextStaff() {
 
         this.currentEntryIndex++;
         // the current index is already at index[0]
         // add 1 to the currentEntryIndex when the button is pressed
 
 
-        if(this.currentEntryIndex >= this.numberOfEntries)
-        {
+        if (this.currentEntryIndex >= this.numberOfEntries) {
             // if the currentEntryIndex have reached the max number of entries
             // subtract 1 from it to avoid the out of bounds exception
             // and then disable the next button;
@@ -146,19 +190,18 @@ public class Controller {
 
         }
 
-        indexField.setText((this.currentEntryIndex+1) + "");
+        indexField.setText((this.currentEntryIndex + 1) + "");
         displayCurrentStaff(this.currentEntryIndex);
 
     }
-    private void previousStaff()
-    {
+
+    private void previousStaff() {
         this.currentEntryIndex--;
 
-        if(this.currentEntryIndex < 0)
-        {
-            this.currentEntryIndex = this.numberOfEntries-1;
+        if (this.currentEntryIndex < 0) {
+            this.currentEntryIndex = this.numberOfEntries - 1;
         }
-        indexField.setText((this.currentEntryIndex+1) + "");
+        indexField.setText((this.currentEntryIndex + 1) + "");
         displayCurrentStaff(this.currentEntryIndex);
     }
 
@@ -172,36 +215,34 @@ public class Controller {
                 currentEntryIndex = 0;
                 currentStaff = staffArrayList.get(currentEntryIndex);
 
-                staffIdField.setText(currentStaff.getStaffId()+"");
+                staffIdField.setText(currentStaff.getStaffId() + "");
                 firstNameField.setText(currentStaff.getFirstName());
                 lastNameField.setText(currentStaff.getLastName());
                 dateOfBirthField.setText(currentStaff.getDateOfBirth());
                 departmentField.setText(currentStaff.getDepartment());
-                salaryField.setText(currentStaff.getSalary()+"");
+                salaryField.setText(currentStaff.getSalary() + "");
                 startDateField.setText(currentStaff.getStartDate());
-                fullTimeField.setText(currentStaff.isFullTime()+"");
+                fullTimeField.setText(currentStaff.isFullTime() + "");
 
                 maxIndexField.setText(numberOfEntries + "");
                 indexField.setText((currentEntryIndex + 1) + "");
             }
-
         } catch (Exception ex) {
             System.err.println("Problem with database connection.");
         }
     }
 
-    private void displayCurrentStaff(int index)
-    {
+    private void displayCurrentStaff(int index) {
 
         currentStaff = this.staffArrayList.get(index);
 
-        staffIdField.setText(currentStaff.getStaffId()+"");
+        staffIdField.setText(currentStaff.getStaffId() + "");
         firstNameField.setText(currentStaff.getFirstName());
         lastNameField.setText(currentStaff.getLastName());
         dateOfBirthField.setText(currentStaff.getDateOfBirth());
         departmentField.setText(currentStaff.getDepartment());
-        salaryField.setText(currentStaff.getSalary()+"");
+        salaryField.setText(currentStaff.getSalary() + "");
         startDateField.setText(currentStaff.getStartDate());
-        fullTimeField.setText(currentStaff.isFullTime()+"");
+        fullTimeField.setText(currentStaff.isFullTime() + "");
     }
 }

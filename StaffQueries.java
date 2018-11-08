@@ -185,34 +185,29 @@ public class StaffQueries {
         ArrayList<Staff> staffArrayList = null;
         ResultSet resultSet;
 
-
-        if (findStaff(query)) {
-
-        } else {
             try {
                 searchByDepartmentStatement.setString(1, "%" + query + "%");
 
                 resultSet = searchByDepartmentStatement.executeQuery();
                 staffArrayList = new ArrayList<>();
 
-                int staffID = resultSet.getInt("StaffId");
-                String fName = resultSet.getString("FirstName");
-                String lName = resultSet.getString("LastName");
-                String dob = resultSet.getString("DateOfBirth");
-                String dept = resultSet.getString("Department");
-                double sal = resultSet.getDouble("Salary");
-                String startDate = resultSet.getString("StartDate");
-                boolean fullTime = resultSet.getBoolean("Fulltime");
 
                 while (resultSet.next()) {
                     // add a new Staff object to the arrayList
-                    staffArrayList.add(new Staff(staffID, fName, lName, dob, dept, sal, startDate, fullTime));
+                    staffArrayList.add(new Staff(resultSet.getInt("StaffId"),
+                            resultSet.getString("FirstName"),
+                            resultSet.getString("LastName"),
+                            resultSet.getString("DateOfBirth"),
+                            resultSet.getString("Department"),
+                            resultSet.getDouble("Salary"),
+                            resultSet.getString("StartDate"),
+                            resultSet.getBoolean("Fulltime")));
                 }
 
             } catch (SQLException sqlEx) {
                 sqlEx.printStackTrace();
             }
-        }
+
 
         return staffArrayList;
     }
