@@ -16,6 +16,7 @@ public class StaffQueries {
     private static PreparedStatement searchStatement;
     private static PreparedStatement searchByDepartmentStatement;
     private static PreparedStatement insertStatement;
+    private static PreparedStatement findStatement;
 
     private String status = "Loading...";
 
@@ -30,9 +31,11 @@ public class StaffQueries {
             this.status = "Driver successfully loaded";
 
             final String _SELECTALL = "SELECT * FROM staff1"; // select entire table
+
             final String _SEARCHQUERY = "SELECT * FROM staff1 WHERE " +
                     "UPPER(FirstName) LIKE UPPER(?) OR " +
                     "UPPER(LastName) LIKE UPPER(?)";
+
             final String _SEARCHDEPTQUERY = "SELECT * FROM staff1 " +
                     "WHERE UPPER(Department) LIKE UPPER(?)";     // search if FirstName = '' OR LastName='' OR Department=''
             final String _INSERTQUERY = "INSERT INTO staff1" +
@@ -40,6 +43,10 @@ public class StaffQueries {
                     "VALUES (?,?,?,?,?,?,?)";
             final String _DELETEQUERY = "DELETE FROM staff1 " +
                     "WHERE StaffId=(?)";
+
+            final String _FINDQUERY = "SELECT * FROM staff1 WHERE " +
+                    "UPPER(FirstName) LIKE UPPER(?) AND " +
+                    "UPPER(LastName) LIKE UPPER(?)";
 
             //establish a connection to the database
             conn = DriverManager.getConnection(_URL, _USER, _PASSWORD);
@@ -50,7 +57,7 @@ public class StaffQueries {
             searchStatement = conn.prepareStatement(_SEARCHQUERY);
             searchByDepartmentStatement = conn.prepareStatement(_SEARCHDEPTQUERY);
             insertStatement = conn.prepareStatement(_INSERTQUERY);
-
+            findStatement = conn.prepareStatement(_FINDQUERY);
 
         } catch (SQLException sqlex) {
             System.err.println("Unable to connect to the Database");
@@ -118,12 +125,12 @@ public class StaffQueries {
      * *this method will add staff to database*/
     public boolean addStaff(String firstName, String lastName, String dob, String dept,
                             double salary, String startDate, boolean fullTime) {
-        boolean results = findStaff(firstName);
+        boolean results = ifStaffExist(firstName,lastName);
 
         try {
             if (results) {
                 // just do not do anything result is FALSE anyway
-                System.out.println(firstName + " is already exists in the database!");
+                return false;
             } else {
                 insertStatement.setString(1, firstName);
                 insertStatement.setString(2, lastName);
@@ -136,11 +143,12 @@ public class StaffQueries {
                 insertStatement.executeUpdate();
 
                 System.out.println("Successfully added!");
+                return true;
             }
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         }
-        return results;
+        return false;
     }
 
     /*******************Find METHOD************************
@@ -211,6 +219,26 @@ public class StaffQueries {
 
 
         return staffArrayList;
+    }
+
+    private boolean ifStaffExist(String firstName, String lastName)
+    {
+        boolean result = false;
+        ResultSet resultSet;
+
+        try {
+            findStatement.setString(1, "%" + firstName + "%");
+            findStatement.setString(2, "%" + lastName + "%");
+            // searchStatement.setString(3, "%" + query + "%");
+
+            resultSet = findStatement.executeQuery();
+            result = resultSet.next(); // check if there are rows in the database
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        }
+
+        return result;
     }
 
     private boolean findStaff(String query) {

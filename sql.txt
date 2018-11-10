@@ -1,0 +1,17 @@
+CREATE TABLE Staff1 (
+    StaffId int primary key auto_increment,
+    FirstName varchar(255) not null,
+    LastName varchar(255) not null,
+    DateOfBirth varchar(255) not null,
+    Department varchar(255) not null,
+	Salary decimal(5,2) not null,
+	StartDate varchar(255) not null,
+	Fulltime boolean
+);
+
+SELECT StaffId, FirstName, LastName, DateOfBirth, Department, Salary, StartDate, Fulltime
+FROM `iactproject`.`staff1`;
+
+SELECT * FROM staff1 WHERE " +
+                    "UPPER(FirstName) LIKE UPPER(?) AND " +
+                    "UPPER(LastName) LIKE UPPER(?);

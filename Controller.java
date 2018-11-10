@@ -124,42 +124,7 @@ public class Controller {
     }
 
     private void insertButtonHandler() {
-        // Clear the fields of top panel
-        indexField.clear();
-        maxIndexField.clear();
-
-        // Clear the fields of info panel
-        staffIdField.clear();
-        firstNameField.clear();
-        lastNameField.clear();
-        dateOfBirthField.clear();
-        departmentField.clear();
-        salaryField.clear();
-        startDateField.clear();
-        fullTimeField.clear();
-
-        //DISABLE ALL BUTTONS EXCEPT THE 'SAVE BUTTON'
-        // index field editable = false;
-        // search fields editable = false;
-        // save button enable
-
-        previousBtn.setDisable(true);
-        nextBtn.setDisable(true);
-        searchByNameBtn.setDisable(true);
-        searchByDepartmentBtn.setDisable(true);
-        updateButton.setDisable(true);
-
-        // only buttons that are currently enable
-        browseAllBtn.setDisable(true);
-        insertButton.setDisable(true);
-
-        indexField.setEditable(false);
-        searchByDepartmentField.setEditable(false);
-        searchByFirstNameField.setEditable(false);
-
-        statusLabel.setText("Add New Staff?");
-        saveButton.setDisable(false);
-        cancelButton.setDisable(false);
+        unResetControls();
     }
 
     private boolean areFieldsValid() {
@@ -170,21 +135,46 @@ public class Controller {
                 salaryField.getText().isEmpty() ||
                 startDateField.getText().isEmpty() ||
                 fullTimeField.getText().isEmpty()) {
-                return false;
-        }
-        else{
-                return true;
+            return false;
+        } else {
+            return true;
         }
     }
 
     private void addNewStaff(boolean isValid) {
 
-        if(!isValid)
-        {
+        if (!isValid) {
             System.out.println("Some fields are missing!");
+        } else {
+            addNewStaff(firstNameField.getText(),
+                    lastNameField.getText(),
+                    dateOfBirthField.getText(),
+                    departmentField.getText(),
+                    salaryField.getText(),
+                    startDateField.getText(),
+                    fullTimeField.getText());
+        }
+    }
+    /* @Overloaded method */
+    private void addNewStaff(String firstName,
+                             String lastName,
+                             String dob,
+                             String dept,
+                             String sal,
+                             String startDate,
+                             String fullTime) {
+        double salary = Double.parseDouble(sal);
+        boolean isFull = Boolean.parseBoolean(fullTime);
+
+        boolean isInserted = staffQueries.addStaff(firstName,lastName,dob,dept,salary,startDate,isFull);
+        if(!isInserted)
+        {
+            System.out.println("Unsuccessful, name already exists");
         }else
         {
-            System.out.println("Ok we can proceed");
+            System.out.println("Successfully added.");
+            displayStaff();
+            resetControls();
         }
     }
 
@@ -291,6 +281,7 @@ public class Controller {
 
                 maxIndexField.setText(numberOfEntries + "");
                 indexField.setText((currentEntryIndex + 1) + "");
+                statusLabel.setText(staffQueries.statusConnection());
 
             }
         } catch (Exception ex) {
@@ -310,5 +301,67 @@ public class Controller {
         salaryField.setText(currentStaff.getSalary() + "");
         startDateField.setText(currentStaff.getStartDate());
         fullTimeField.setText(currentStaff.isFullTime() + "");
+    }
+    private void resetControls()
+    {
+        //ReEnable THE DISABLED PRIMARY BUTTONS
+        // index field editable = true;
+        // search fields editable = true;
+
+        previousBtn.setDisable(false);
+        nextBtn.setDisable(false);
+        searchByNameBtn.setDisable(false);
+        searchByDepartmentBtn.setDisable(false);
+        updateButton.setDisable(false);
+
+
+        browseAllBtn.setDisable(false);
+        insertButton.setDisable(false);
+
+        indexField.setEditable(true);
+        searchByDepartmentField.setEditable(true);
+        searchByFirstNameField.setEditable(true);
+
+        saveButton.setDisable(true);
+        cancelButton.setDisable(true);
+    }
+    private void unResetControls()
+    {
+        // Clear the fields of top panel
+        indexField.clear();
+        maxIndexField.clear();
+
+        // Clear the fields of info panel
+        staffIdField.clear();
+        firstNameField.clear();
+        lastNameField.clear();
+        dateOfBirthField.clear();
+        departmentField.clear();
+        salaryField.clear();
+        startDateField.clear();
+        fullTimeField.clear();
+
+        //DISABLE ALL BUTTONS EXCEPT THE 'SAVE BUTTON'
+        // index field editable = false;
+        // search fields editable = false;
+        // save button enable
+
+        previousBtn.setDisable(true);
+        nextBtn.setDisable(true);
+        searchByNameBtn.setDisable(true);
+        searchByDepartmentBtn.setDisable(true);
+        updateButton.setDisable(true);
+
+        // only buttons that are currently enable
+        browseAllBtn.setDisable(true);
+        insertButton.setDisable(true);
+
+        indexField.setEditable(false);
+        searchByDepartmentField.setEditable(false);
+        searchByFirstNameField.setEditable(false);
+
+        statusLabel.setText("Add New Staff?");
+        saveButton.setDisable(false);
+        cancelButton.setDisable(false);
     }
 }
