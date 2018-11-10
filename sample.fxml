@@ -29,10 +29,9 @@
     <!--DATA SECTION-->
 
     <!--ROW #2 Staff ID-->
-    <Label fx:id="staffIdLabel" text="Staff ID" GridPane.rowIndex="1" GridPane.columnIndex="0"
-           style="-fx-padding-left: 10"/>
+    <Label fx:id="staffIdLabel" text="Staff ID" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
     <TextField fx:id="staffIdField" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3"
-               editable="false"/>
+               editable="false" style="-fx-background-color: #e6e6e6; -fx-font-weight: bold"/>
     <!--ROW #3 First Name-->
     <Label fx:id="firstNameLabel" text="First Name" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
     <TextField fx:id="firstNameField" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
@@ -85,11 +84,17 @@
     <HBox GridPane.rowIndex="8" GridPane.columnIndex="5" GridPane.columnSpan="4" spacing="5" >
     <Button fx:id="browseAllBtn" text="View All" onAction="#onButtonClicked"/>
     <Button fx:id="insertButton" text="Insert" onAction="#onButtonClicked"/>
-    <Button fx:id="updateButton" text="Update" />
+    <Button fx:id="updateButton" text="Update" onAction="#onButtonClicked"/>
+
     </HBox>
 
     <HBox GridPane.rowIndex="9" GridPane.columnIndex="0" GridPane.columnSpan="4">
         <Label text="STATUS: " style="-fx-font-weight: bold;"/>
         <Label fx:id="statusLabel" text=""/>
     </HBox>
+    <HBox GridPane.rowIndex="10" GridPane.columnIndex="0" GridPane.columnSpan="4" spacing="5">
+        <Button fx:id="saveButton" text="Save" disable="true" onAction="#onButtonClicked"/>
+        <Button fx:id="cancelButton" text="Cancel"  disable="true" onAction="#onButtonClicked"/>
+    </HBox>
+
 </GridPane>

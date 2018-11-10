@@ -1,19 +1,21 @@
 package sample;
 
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.xml.soap.Text;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 
 public class Controller {
@@ -54,6 +56,11 @@ public class Controller {
     Button searchByDepartmentBtn;
     @FXML
     Button insertButton;
+    @FXML
+    Button updateButton;
+    @FXML
+    Button saveButton, cancelButton;
+
 
     @FXML
     DatePicker datePickerField;
@@ -68,10 +75,9 @@ public class Controller {
 
     @FXML
     public void onButtonClicked(ActionEvent e) {
-        if (e.getSource().equals("")) {
-            System.out.println("Previous Button here!");
 
-        } else if (e.getSource().equals(browseAllBtn)) { // If browse all btn is clicked
+
+        if (e.getSource().equals(browseAllBtn)) { // If browse all btn is clicked
             displayStaff();
         } else if (e.getSource().equals(nextBtn)) // If next btn is clicked
         {
@@ -90,9 +96,14 @@ public class Controller {
             } else {
                 searchByDepartment(searchByDepartmentField.getText());
             }
-        }else if(e.getSource().equals(insertButton))
-        {
-            insertNewStaff();
+        } else if (e.getSource().equals(insertButton)) {
+            insertButtonHandler();
+        } else if (e.getSource().equals(updateButton)) {
+
+        } else if (e.getSource().equals(saveButton)) {
+            addNewStaff(areFieldsValid());
+        } else if (e.getSource().equals(cancelButton)) {
+
         }
     }
 
@@ -112,11 +123,69 @@ public class Controller {
         }
     }
 
-    private void insertNewStaff()
-    {
+    private void insertButtonHandler() {
+        // Clear the fields of top panel
+        indexField.clear();
+        maxIndexField.clear();
 
+        // Clear the fields of info panel
+        staffIdField.clear();
+        firstNameField.clear();
+        lastNameField.clear();
+        dateOfBirthField.clear();
+        departmentField.clear();
+        salaryField.clear();
+        startDateField.clear();
+        fullTimeField.clear();
 
+        //DISABLE ALL BUTTONS EXCEPT THE 'SAVE BUTTON'
+        // index field editable = false;
+        // search fields editable = false;
+        // save button enable
 
+        previousBtn.setDisable(true);
+        nextBtn.setDisable(true);
+        searchByNameBtn.setDisable(true);
+        searchByDepartmentBtn.setDisable(true);
+        updateButton.setDisable(true);
+
+        // only buttons that are currently enable
+        browseAllBtn.setDisable(true);
+        insertButton.setDisable(true);
+
+        indexField.setEditable(false);
+        searchByDepartmentField.setEditable(false);
+        searchByFirstNameField.setEditable(false);
+
+        statusLabel.setText("Add New Staff?");
+        saveButton.setDisable(false);
+        cancelButton.setDisable(false);
+    }
+
+    private boolean areFieldsValid() {
+        if (firstNameField.getText().isEmpty() ||
+                lastNameField.getText().isEmpty() ||
+                dateOfBirthField.getText().isEmpty() ||
+                departmentField.getText().isEmpty() ||
+                salaryField.getText().isEmpty() ||
+                startDateField.getText().isEmpty() ||
+                fullTimeField.getText().isEmpty()) {
+                return false;
+        }
+        else{
+                return true;
+        }
+    }
+
+    private void addNewStaff(boolean isValid) {
+
+        if(!isValid)
+        {
+            System.out.println("Some fields are missing!");
+        }else
+        {
+            System.out.println("Ok we can proceed");
+        }
     }
 
     private void searchByNames(String query) {
@@ -152,8 +221,7 @@ public class Controller {
             staffArrayList = staffQueries.searchStaffByDepartment(query);
             numberOfEntries = staffArrayList.size();
 
-            if(numberOfEntries != 0)
-            {
+            if (numberOfEntries != 0) {
                 currentEntryIndex = 0;
                 currentStaff = staffArrayList.get(0);
 
@@ -161,15 +229,13 @@ public class Controller {
 
 
                 maxIndexField.setText(numberOfEntries + "");
-                indexField.setText((currentEntryIndex+1) + "");
-            }else
-            {
+                indexField.setText((currentEntryIndex + 1) + "");
+            } else {
                 System.out.println("Not found!");
                 displayStaff();
             }
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -225,6 +291,7 @@ public class Controller {
 
                 maxIndexField.setText(numberOfEntries + "");
                 indexField.setText((currentEntryIndex + 1) + "");
+
             }
         } catch (Exception ex) {
             System.err.println("Problem with database connection.");
