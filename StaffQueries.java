@@ -129,7 +129,7 @@ public class StaffQueries {
 
         try {
             if (results) {
-                // just do not do anything result is FALSE anyway
+                // the staff already exist then return false;
                 return false;
             } else {
                 insertStatement.setString(1, firstName);
@@ -142,7 +142,7 @@ public class StaffQueries {
 
                 insertStatement.executeUpdate();
 
-                System.out.println("Successfully added!");
+                // SUCCESS adding new staff return true;
                 return true;
             }
         } catch (SQLException sqlEx) {

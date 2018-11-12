@@ -9,6 +9,10 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Spinner?>
 <GridPane fx:controller="sample.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT" hgap="10" vgap="10">
 
@@ -43,23 +47,51 @@
     <!--ROW #5 Date Of Birth-->
     <Label fx:id="dateOfBirthLabel" text="Date of Birth" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
     <TextField fx:id="dateOfBirthField" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3" visible="true"/>
-    <DatePicker fx:id="datePickerField" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3" visible="false"/>
+    <!--THIS IS A DATE PICKER CONTROL DEFAULT EDITABLE SET TO FALSE-->
+    <DatePicker fx:id="datePickerField" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3" visible="false" disable="true" editable="false"/>
 
     <!--ROW #6 Department-->
     <Label fx:id="departmentLabel" text="Department" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
     <TextField fx:id="departmentField" GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+    <!--DEPARTMENT DROP DOWN BOX (COMBO BOX)-->
+    <ComboBox fx:id="departmentDropDown" GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="3" editable="false" visible="false" disable="true">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="IT"/>
+                <String fx:value="Human Resources"/>
+                <String fx:value="Maintenance"/>
+                <String fx:value="House Keeping"/>
+                <String fx:value="Restaurant"/>
+                <String fx:value="Room Service"/>
+                <String fx:value="Reception"/>
+                <String fx:value="Kitchen"/>
+                <String fx:value="Accounts"/>
+            </FXCollections>
+        </items>
+    </ComboBox>
 
     <!--ROW #7 Salary-->
     <Label fx:id="salaryLabel" text="Salary" GridPane.rowIndex="6" GridPane.columnIndex="0"/>
-    <TextField fx:id="salaryField" GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+    <TextField fx:id="salaryField" GridPane.rowIndex="6" GridPane.columnIndex="1" GridPane.columnSpan="3" onAction="#onKeyPressed"/>
 
     <!--ROW # 8 Start Date -->
     <Label fx:id="startDateLabel" text="Start Date" GridPane.rowIndex="7" GridPane.columnIndex="0"/>
     <TextField fx:id="startDateField" GridPane.rowIndex="7" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+    <!--THIS IS A StartDate PICKER CONTROL DEFAULT EDITABLE SET TO FALSE-->
+    <DatePicker fx:id="startDatePickerField" GridPane.rowIndex="7" GridPane.columnIndex="1" GridPane.columnSpan="3" visible="false" disable="true" editable="false"/>
 
     <!--ROW # 9 Full Time-->
     <Label fx:id="fullTimeLabel" text="Full Time" GridPane.rowIndex="8" GridPane.columnIndex="0"/>
     <TextField fx:id="fullTimeField" GridPane.rowIndex="8" GridPane.columnIndex="1" GridPane.columnSpan="3"/>
+
+    <ComboBox fx:id="fullTimeDropDown" GridPane.rowIndex="8" GridPane.columnIndex="1" GridPane.columnSpan="3" editable="false" visible="false" disable="true">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="True"/>
+                <String fx:value="False"/>
+            </FXCollections>
+        </items>
+    </ComboBox>
 
     <!--QUERY FIELD SECTION-->
     <!--SEARCH BY FIRSTNAME AND LASTNAME-->
