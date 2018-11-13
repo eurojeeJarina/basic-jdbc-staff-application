@@ -17,6 +17,7 @@ public class StaffQueries {
     private static PreparedStatement searchByDepartmentStatement;
     private static PreparedStatement insertStatement;
     private static PreparedStatement findStatement;
+    private static PreparedStatement updateStatement;
 
     private String status = "Loading...";
 
@@ -38,15 +39,21 @@ public class StaffQueries {
 
             final String _SEARCHDEPTQUERY = "SELECT * FROM staff1 " +
                     "WHERE UPPER(Department) LIKE UPPER(?)";     // search if FirstName = '' OR LastName='' OR Department=''
+
             final String _INSERTQUERY = "INSERT INTO staff1" +
                     "(FirstName, LastName, DateOfBirth,Department,Salary,StartDate,Fulltime)" +
                     "VALUES (?,?,?,?,?,?,?)";
+
             final String _DELETEQUERY = "DELETE FROM staff1 " +
                     "WHERE StaffId=(?)";
 
             final String _FINDQUERY = "SELECT * FROM staff1 WHERE " +
                     "UPPER(FirstName) LIKE UPPER(?) AND " +
                     "UPPER(LastName) LIKE UPPER(?)";
+
+            final String _UPDATEQUERY = "UPDATE staff1 " +
+                    "SET FirstName= (?), LastName = (?), DateOfBirth = (?), Department = (?), Salary = (?), StartDate = (?), Fulltime = (?)" +
+                    "WHERE StaffId = (?)";
 
             //establish a connection to the database
             conn = DriverManager.getConnection(_URL, _USER, _PASSWORD);
@@ -58,6 +65,7 @@ public class StaffQueries {
             searchByDepartmentStatement = conn.prepareStatement(_SEARCHDEPTQUERY);
             insertStatement = conn.prepareStatement(_INSERTQUERY);
             findStatement = conn.prepareStatement(_FINDQUERY);
+            updateStatement = conn.prepareStatement(_UPDATEQUERY);
 
         } catch (SQLException sqlex) {
             System.err.println("Unable to connect to the Database");
@@ -79,7 +87,10 @@ public class StaffQueries {
             sqlEx.printStackTrace();
         }
     }
-
+    /*******************GET ALL METHOD***********************
+     *
+     *
+     * *this method will get all the staff to database*/
     public ArrayList<Staff> getAllStaff() {
         ArrayList<Staff> staffArrayList = null;
         ResultSet resultSet = null;
@@ -148,6 +159,36 @@ public class StaffQueries {
         } catch (SQLException sqlEx) {
             sqlEx.printStackTrace();
         }
+        return false;
+    }
+
+    /*******************UPDATE METHOD***********************
+     *
+     *
+     * *this method will update staff to database*/
+
+    public boolean updateStaff(int staffId, String firstName, String lastName, String dateOfBirth, String department, double salary,
+                                String startDate, boolean fullTime)
+    {
+        try{
+            updateStatement.setString(1, firstName);
+            updateStatement.setString(2, lastName);
+            updateStatement.setString(3, dateOfBirth);
+            updateStatement.setString(4, department);
+            updateStatement.setDouble(5, salary);
+            updateStatement.setString(6, startDate);
+            updateStatement.setBoolean(7, fullTime);
+            updateStatement.setInt(8, staffId);
+
+            updateStatement.executeUpdate();
+
+            return true;
+
+        }catch (SQLException sqlEx)
+        {
+            sqlEx.printStackTrace();
+        }
+
         return false;
     }
 

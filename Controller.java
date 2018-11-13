@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,9 +20,12 @@ import javax.swing.text.DateFormatter;
 import javax.xml.soap.Text;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -67,7 +71,7 @@ public class Controller {
     @FXML
     Button updateButton;
     @FXML
-    Button saveButton, cancelButton;
+    Button saveButton, cancelButton, saveChangesButton;
 
 
     @FXML
@@ -111,13 +115,20 @@ public class Controller {
 
 
         } else if (e.getSource().equals(updateButton)) {
+            updateButtonHandler();
+            // System.out.println(this.currentStaff.getDateOfBirth());
+            // System.out.println(this.currentStaff.getStartDate());
+            //System.out.println(staffQueries.updateStaff(22, "Alex", "Byrne", "13/12/1993", "Accounts",  10000f,"10/12/2013",false));
 
         } else if (e.getSource().equals(saveButton)) {
 
             addNewStaff(areFieldsValid());
             //System.out.println(dateFormatter(this.startDatePickerField.getValue()));
 
-        } else if (e.getSource().equals(cancelButton)) {
+        } else if (e.getSource().equals(saveChangesButton)){
+                updateStaff(areFieldsValid());
+
+        }else if (e.getSource().equals(cancelButton)) {
             resetControls();
             displayStaff();
         }
@@ -152,7 +163,6 @@ public class Controller {
     }
 
     private void insertButtonHandler() {
-        unResetControls();
 
         // DISABLE DATE OF BIRTH FIELDS
         datePickerField.setVisible(true);
@@ -184,9 +194,138 @@ public class Controller {
         fullTimeDropDown.setDisable(false);
         fullTimeDropDown.getSelectionModel().selectFirst();
 
+        // Clear the fields of top panel
+        indexField.clear();
+        maxIndexField.clear();
+        indexField.setDisable(true);
+        maxIndexField.setDisable(true);
+
+        // Clear the fields of info panel
+        staffIdField.clear();
+        firstNameField.clear();
+        lastNameField.clear();
+        dateOfBirthField.clear();
+        datePickerField.setValue(null);
+        departmentField.clear();
+        salaryField.clear();
+        startDatePickerField.setValue(null);
+        fullTimeField.clear();
+
+        // Clear the search fields
+        searchByFirstNameField.clear();
+        searchByDepartmentField.clear();
+
+        //DISABLE ALL BUTTONS EXCEPT THE 'SAVE BUTTON'
+        // index field editable = false;
+        // search fields editable = false;
+        // save button enable
+
+        previousBtn.setDisable(true);
+        nextBtn.setDisable(true);
+        searchByNameBtn.setDisable(true);
+        searchByDepartmentBtn.setDisable(true);
+        updateButton.setDisable(true);
+
+        // only buttons that are currently enable
+        browseAllBtn.setDisable(true);
+        insertButton.setDisable(true);
+
+        searchByDepartmentField.setDisable(true);
+        searchByFirstNameField.setDisable(true);
+
+        saveChangesButton.setDisable(true);
+        saveButton.setDisable(false);
+        cancelButton.setDisable(false);
 
 
         statusLabel.setText("Add New Staff?");
+    }
+
+    private void updateButtonHandler() {
+        // DISABLE DATE OF BIRTH FIELDS
+        datePickerField.setVisible(true);
+        datePickerField.setDisable(false);
+
+        dateOfBirthField.setDisable(true);
+        dateOfBirthField.setVisible(false);
+
+        // DISABLE START DATE FIELDS
+        startDatePickerField.setVisible(true);
+        startDatePickerField.setDisable(false);
+
+        startDateField.setVisible(false);
+        startDateField.setDisable(true);
+
+        // DISABLED DEPARTMENT FIELD HERE
+        departmentField.setDisable(true);
+
+        departmentDropDown.setDisable(false);
+        departmentDropDown.setVisible(true);
+        departmentDropDown.setEditable(false);
+        departmentDropDown.getSelectionModel().clearSelection();
+
+        // DISABLED FULLTIME FIELDS
+        fullTimeField.setDisable(true);
+        fullTimeField.setVisible(false);
+
+        fullTimeDropDown.setVisible(true);
+        fullTimeDropDown.setDisable(false);
+        fullTimeDropDown.getSelectionModel().selectFirst();
+
+        // Clear the fields of top panel
+        indexField.clear();
+        maxIndexField.clear();
+        indexField.setDisable(true);
+        maxIndexField.setDisable(true);
+
+        // Clear the fields of info panel
+        //staffIdField.clear();
+        // firstNameField.clear();
+        //lastNameField.clear();
+        // dateOfBirthField.clear();
+
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate dateOfBirth = LocalDate.parse(this.currentStaff.getDateOfBirth(), formatter);
+        LocalDate startDate = LocalDate.parse(this.currentStaff.getStartDate(), formatter);
+
+        datePickerField.setValue(dateOfBirth);
+
+        departmentDropDown.setValue(this.currentStaff.getDepartment());
+        //salaryField.clear();
+
+        startDatePickerField.setValue(startDate);
+
+        fullTimeDropDown.setValue(this.currentStaff.isFullTime());
+
+        // Clear the search fields
+        searchByFirstNameField.clear();
+        searchByDepartmentField.clear();
+
+        //DISABLE ALL BUTTONS EXCEPT THE 'SAVE BUTTON'
+        // index field editable = false;
+        // search fields editable = false;
+        // save button enable
+
+        previousBtn.setDisable(true);
+        nextBtn.setDisable(true);
+        searchByNameBtn.setDisable(true);
+        searchByDepartmentBtn.setDisable(true);
+        updateButton.setDisable(true);
+
+        // only buttons that are currently enable
+        browseAllBtn.setDisable(true);
+        insertButton.setDisable(true);
+
+        searchByDepartmentField.setDisable(true);
+        searchByFirstNameField.setDisable(true);
+
+        saveChangesButton.setDisable(false);
+        saveButton.setDisable(true);
+        cancelButton.setDisable(false);
+
+        statusLabel.setText("Save changes");
     }
 
     private boolean areFieldsValid() {
@@ -200,28 +339,57 @@ public class Controller {
                 salaryField.getText().isEmpty() ||
                 fullTimeDropDown.getValue() == null) {
 
-                statusLabel.setTextFill(Color.RED);
-                statusLabel.setText("You have missing fields.");
+            statusLabel.setTextFill(Color.RED);
+            statusLabel.setText("You have missing fields.");
             return false;
 
         } else {
             try {
                 double salaryValue = Double.parseDouble(salaryField.getText());
-                if (salaryValue < 10000f || salaryValue > 99000f)
-                {
+                if (salaryValue < 10000f || salaryValue > 99000f) {
                     statusLabel.setTextFill(Color.RED);
                     statusLabel.setText("Salary not in Range 10000-99000");
                     return false;
+                } else {
+                    return true;
                 }
-                else{
-                        return true;
-                }
+            } catch (NumberFormatException e) {
+                statusLabel.setTextFill(Color.RED);
+                statusLabel.setText("Salary: Numeric only.");
+                return false;
             }
-            catch (NumberFormatException e)
+        }
+    }
+
+    private void updateStaff(boolean isValid)
+    {
+        if(!isValid)
+        {
+            //
+        }else
+        {
+            double salary = Double.parseDouble(salaryField.getText());
+            boolean isFullTime = Boolean.parseBoolean(fullTimeDropDown.getValue().toString());
+
+            boolean isUpdate = staffQueries.updateStaff(this.currentStaff.getStaffId(),
+                    firstNameField.getText(),
+                    lastNameField.getText(),
+                    dateFormatter(this.datePickerField.getValue()),
+                    departmentDropDown.getValue().toString(),
+                    salary,
+                    dateFormatter(this.startDatePickerField.getValue()),
+                    isFullTime);
+
+            if(!isUpdate)
             {
                 statusLabel.setTextFill(Color.RED);
-                statusLabel.setText("Salary must be numbers.");
-                return false;
+                statusLabel.setText("Unable to save changes.");
+            }else
+            {
+                statusLabel.setTextFill(Color.GREEN);
+                statusLabel.setText("Successfully saved changes.");
+                displayStaff();
+                resetControls();
             }
         }
     }
@@ -415,6 +583,7 @@ public class Controller {
         searchByDepartmentField.setDisable(false);
         searchByFirstNameField.setDisable(false);
 
+        saveChangesButton.setDisable(true);
         saveButton.setDisable(true);
         cancelButton.setDisable(true);
 
@@ -450,49 +619,49 @@ public class Controller {
         statusLabel.setTextFill(Color.BLACK);
     }
 
-    private void unResetControls() {
-        // Clear the fields of top panel
-        indexField.clear();
-        maxIndexField.clear();
-        indexField.setDisable(true);
-        maxIndexField.setDisable(true);
-
-        // Clear the fields of info panel
-        staffIdField.clear();
-        firstNameField.clear();
-        lastNameField.clear();
-        dateOfBirthField.clear();
-        datePickerField.setValue(null);
-        departmentField.clear();
-        salaryField.clear();
-        startDatePickerField.setValue(null);
-        fullTimeField.clear();
-
-        // Clear the search fields
-        searchByFirstNameField.clear();
-        searchByDepartmentField.clear();
-
-        //DISABLE ALL BUTTONS EXCEPT THE 'SAVE BUTTON'
-        // index field editable = false;
-        // search fields editable = false;
-        // save button enable
-
-        previousBtn.setDisable(true);
-        nextBtn.setDisable(true);
-        searchByNameBtn.setDisable(true);
-        searchByDepartmentBtn.setDisable(true);
-        updateButton.setDisable(true);
-
-        // only buttons that are currently enable
-        browseAllBtn.setDisable(true);
-        insertButton.setDisable(true);
-
-        searchByDepartmentField.setDisable(true);
-        searchByFirstNameField.setDisable(true);
-
-        saveButton.setDisable(false);
-        cancelButton.setDisable(false);
-    }
+//    private void unResetControls() {
+//        // Clear the fields of top panel
+//        indexField.clear();
+//        maxIndexField.clear();
+//        indexField.setDisable(true);
+//        maxIndexField.setDisable(true);
+//
+//        // Clear the fields of info panel
+//        staffIdField.clear();
+//        firstNameField.clear();
+//        lastNameField.clear();
+//        dateOfBirthField.clear();
+//        datePickerField.setValue(null);
+//        departmentField.clear();
+//        salaryField.clear();
+//        startDatePickerField.setValue(null);
+//        fullTimeField.clear();
+//
+//        // Clear the search fields
+//        searchByFirstNameField.clear();
+//        searchByDepartmentField.clear();
+//
+//        //DISABLE ALL BUTTONS EXCEPT THE 'SAVE BUTTON'
+//        // index field editable = false;
+//        // search fields editable = false;
+//        // save button enable
+//
+//        previousBtn.setDisable(true);
+//        nextBtn.setDisable(true);
+//        searchByNameBtn.setDisable(true);
+//        searchByDepartmentBtn.setDisable(true);
+//        updateButton.setDisable(true);
+//
+//        // only buttons that are currently enable
+//        browseAllBtn.setDisable(true);
+//        insertButton.setDisable(true);
+//
+//        searchByDepartmentField.setDisable(true);
+//        searchByFirstNameField.setDisable(true);
+//
+//        saveButton.setDisable(false);
+//        cancelButton.setDisable(false);
+//    }
 
     private String dateFormatter(LocalDate date) {
         LocalDate dateValue = date;
