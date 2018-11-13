@@ -12,11 +12,11 @@ CREATE TABLE Staff1 (
 SELECT StaffId, FirstName, LastName, DateOfBirth, Department, Salary, StartDate, Fulltime
 FROM `iactproject`.`staff1`;
 
-SELECT * FROM staff1 WHERE " +
-                    "UPPER(FirstName) LIKE UPPER(?) AND " +
-                    "UPPER(LastName) LIKE UPPER(?);
+SELECT * FROM staff1 WHERE UPPER(FirstName) LIKE UPPER(?) AND UPPER(LastName) LIKE UPPER(?);
 
-UPDATE staff1 SET FirstName= (?), LastName = (?), DateOfBirth = (?), Department = (?), Salary = (?), StartDate = (?), Fulltime = (?)" +
-                    "WHERE StaffId = (?);
+UPDATE staff1 SET FirstName= (?), LastName = (?), DateOfBirth = (?), Department = (?), Salary = (?), StartDate = (?), Fulltime = (?) WHERE StaffId = (?);
 
+SELECT * FROM staff1 WHERE UPPER(Department) LIKE UPPER(?);
+
+INSERT INTO staff1 (FirstName, LastName, DateOfBirth,Department,Salary,StartDate,Fulltime) VALUES (?,?,?,?,?,?,?);
 
