@@ -44,8 +44,8 @@ public class StaffQueries {
                     "(FirstName, LastName, DateOfBirth,Department,Salary,StartDate,Fulltime)" +
                     "VALUES (?,?,?,?,?,?,?)";
 
-            final String _DELETEQUERY = "DELETE FROM staff1 " +
-                    "WHERE StaffId=(?)";
+//            final String _DELETEQUERY = "DELETE FROM staff1 " +
+//                    "WHERE StaffId=(?)";
 
             final String _FINDQUERY = "SELECT * FROM staff1 WHERE " +
                     "UPPER(FirstName) LIKE UPPER(?) AND " +

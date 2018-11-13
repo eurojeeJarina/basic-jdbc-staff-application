@@ -1,33 +1,14 @@
 package sample;
 
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.stage.Stage;
-import javafx.util.converter.LocalDateTimeStringConverter;
 
-import javax.swing.text.DateFormatter;
-import javax.xml.soap.Text;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Optional;
+
 
 
 public class Controller {
@@ -291,9 +272,9 @@ public class Controller {
 
 
         datePickerField.setValue(stringToDate(this.currentStaff.getDateOfBirth()));
-        departmentDropDown.setValue(departmentDropDown.getItems().get(getComboBoxIndex(this.currentStaff.getDepartment(), departmentDropDown)));
+        departmentDropDown.getSelectionModel().select(getComboBoxIndex(this.currentStaff.getDepartment(), departmentDropDown));
         startDatePickerField.setValue(stringToDate(this.currentStaff.getStartDate()));
-        fullTimeDropDown.setValue(this.currentStaff.isFullTime());
+        fullTimeDropDown.getSelectionModel().select(getComboBoxIndex(String.valueOf(this.currentStaff.isFullTime()), fullTimeDropDown));
 
         // Clear the search fields
         searchByFirstNameField.clear();
@@ -335,8 +316,7 @@ public class Controller {
                 salaryField.getText().isEmpty() ||
                 fullTimeDropDown.getValue() == null) {
 
-            statusLabel.setTextFill(Color.RED);
-            statusLabel.setText("You have missing fields.");
+
             return false;
 
         } else {
@@ -361,7 +341,8 @@ public class Controller {
     {
         if(!isValid)
         {
-            //
+            statusLabel.setTextFill(Color.RED);
+            statusLabel.setText("Unable to save changes.");
         }else
         {
             double salary = Double.parseDouble(salaryField.getText());
@@ -393,7 +374,7 @@ public class Controller {
     private void addNewStaff(boolean isValid) {
 
         if (!isValid) {
-            //
+            System.out.println("missing");
         } else {
 
             addNewStaff(firstNameField.getText(),
@@ -440,7 +421,7 @@ public class Controller {
 
             if(staffArrayList == null)
             {
-                numberOfEntries = 0;
+                displayStaff();
             }else{
                 numberOfEntries = staffArrayList.size();
             }
@@ -684,14 +665,14 @@ public class Controller {
 //    }
 
     private String dateFormatter(LocalDate date) {
-        LocalDate dateValue = date;
-        String datePickerValue = "";
 
-        if (dateValue == null) {
+        String datePickerValue;
+
+        if (date == null) {
             datePickerValue = null;
         } else {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
-            datePickerValue = formatter.format(dateValue);
+            datePickerValue = formatter.format(date);
         }
 
         return datePickerValue;
@@ -701,9 +682,8 @@ public class Controller {
     {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        LocalDate localDate = LocalDate.parse(date, formatter);
+        return LocalDate.parse(date, formatter);
 
-        return localDate;
     }
 
     private int getComboBoxIndex(String item, ComboBox comboBox)
@@ -712,7 +692,7 @@ public class Controller {
 
         while(i < comboBox.getItems().size())
         {
-            if(item.equals(comboBox.getItems().get(i)))
+            if(item.equalsIgnoreCase(comboBox.getItems().get(i).toString()))
             {
                 break;
             }
@@ -720,6 +700,5 @@ public class Controller {
         }
 
         return i;
-
     }
 }
