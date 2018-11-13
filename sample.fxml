@@ -127,7 +127,7 @@
     <HBox GridPane.rowIndex="10" GridPane.columnIndex="0" GridPane.columnSpan="4" spacing="5">
         <Button fx:id="saveButton" text="Add Staff" disable="true" onAction="#onButtonClicked"/>
         <Button fx:id="saveChangesButton" text="Save Changes" disable="true" onAction="#onButtonClicked"/>
-        <Button fx:id="cancelButton" text="Cancel"  disable="true" onAction="#onButtonClicked"/>
+        <Button fx:id="cancelButton" text="Back"  disable="true" onAction="#onButtonClicked"/>
     </HBox>
 
 </GridPane>

@@ -83,13 +83,13 @@ public class Controller {
     public void initialize() {
         staffQueries = new StaffQueries(); // initialize the
         statusLabel.setText(staffQueries.statusConnection());
+        statusLabel.setText("Connected to the database");
         displayStaff();
+        resetControls();
     }
 
     @FXML
     public void onButtonClicked(ActionEvent e) {
-
-
         if (e.getSource().equals(browseAllBtn)) { // If browse all btn is clicked
             displayStaff();
         } else if (e.getSource().equals(nextBtn)) // If next btn is clicked
@@ -124,6 +124,7 @@ public class Controller {
 
             addNewStaff(areFieldsValid());
             //System.out.println(dateFormatter(this.startDatePickerField.getValue()));
+
 
         } else if (e.getSource().equals(saveChangesButton)){
                 updateStaff(areFieldsValid());
@@ -211,6 +212,11 @@ public class Controller {
         startDatePickerField.setValue(null);
         fullTimeField.clear();
 
+        // #Set the data fields editable TRUE
+        firstNameField.setEditable(true);
+        lastNameField.setEditable(true);
+        salaryField.setEditable(true);
+
         // Clear the search fields
         searchByFirstNameField.clear();
         searchByDepartmentField.clear();
@@ -272,31 +278,21 @@ public class Controller {
         fullTimeDropDown.setDisable(false);
         fullTimeDropDown.getSelectionModel().selectFirst();
 
+        // #Set the data fields editable TRUE
+        firstNameField.setEditable(true);
+        lastNameField.setEditable(true);
+        salaryField.setEditable(true);
+
         // Clear the fields of top panel
         indexField.clear();
         maxIndexField.clear();
         indexField.setDisable(true);
         maxIndexField.setDisable(true);
 
-        // Clear the fields of info panel
-        //staffIdField.clear();
-        // firstNameField.clear();
-        //lastNameField.clear();
-        // dateOfBirthField.clear();
 
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-        LocalDate dateOfBirth = LocalDate.parse(this.currentStaff.getDateOfBirth(), formatter);
-        LocalDate startDate = LocalDate.parse(this.currentStaff.getStartDate(), formatter);
-
-        datePickerField.setValue(dateOfBirth);
-
-        departmentDropDown.setValue(this.currentStaff.getDepartment());
-        //salaryField.clear();
-
-        startDatePickerField.setValue(startDate);
-
+        datePickerField.setValue(stringToDate(this.currentStaff.getDateOfBirth()));
+        departmentDropDown.setValue(departmentDropDown.getItems().get(getComboBoxIndex(this.currentStaff.getDepartment(), departmentDropDown)));
+        startDatePickerField.setValue(stringToDate(this.currentStaff.getStartDate()));
         fullTimeDropDown.setValue(this.currentStaff.isFullTime());
 
         // Clear the search fields
@@ -388,8 +384,8 @@ public class Controller {
             {
                 statusLabel.setTextFill(Color.GREEN);
                 statusLabel.setText("Successfully saved changes.");
-                displayStaff();
-                resetControls();
+                saveChangesButton.setDisable(true);
+                cancelButton.setText("Finish");
             }
         }
     }
@@ -429,8 +425,8 @@ public class Controller {
         } else {
             statusLabel.setTextFill(Color.GREEN);
             statusLabel.setText("Successfully added a new staff.");
-            displayStaff();
-            resetControls();
+            saveButton.setDisable(true);
+            cancelButton.setText("Finish");
         }
     }
 
@@ -438,9 +434,16 @@ public class Controller {
         try {
 
             staffArrayList = staffQueries.searchStaff(query); // pass the parameter to the searchStaff() from staffQuerries Class
-            numberOfEntries = staffArrayList.size();
+            numberOfEntries = 0;
 
             //System.out.println(numberOfEntries);
+
+            if(staffArrayList == null)
+            {
+                numberOfEntries = 0;
+            }else{
+                numberOfEntries = staffArrayList.size();
+            }
 
             if (numberOfEntries != 0) {
                 currentEntryIndex = 0;
@@ -451,8 +454,12 @@ public class Controller {
 
                 maxIndexField.setText(numberOfEntries + "");
                 indexField.setText((currentEntryIndex + 1) + "");
+                statusLabel.setTextFill(Color.GREEN);
+                statusLabel.setText("Name found");
             } else {
-                System.out.println("Not found!");
+                statusLabel.setTextFill(Color.RED);
+                statusLabel.setText("Name not found");
+
                 displayStaff();
             }
 
@@ -476,8 +483,11 @@ public class Controller {
 
                 maxIndexField.setText(numberOfEntries + "");
                 indexField.setText((currentEntryIndex + 1) + "");
+                statusLabel.setTextFill(Color.GREEN);
+                statusLabel.setText("Department found");
             } else {
-                System.out.println("Not found!");
+                statusLabel.setTextFill(Color.RED);
+                statusLabel.setText("Department not found");
                 displayStaff();
             }
 
@@ -497,7 +507,7 @@ public class Controller {
             // if the currentEntryIndex have reached the max number of entries
             // subtract 1 from it to avoid the out of bounds exception
             // and then disable the next button;
-            this.currentEntryIndex = 0;
+            this.currentEntryIndex = this.numberOfEntries-1;
 
         }
 
@@ -509,8 +519,8 @@ public class Controller {
     private void previousStaff() {
         this.currentEntryIndex--;
 
-        if (this.currentEntryIndex < 0) {
-            this.currentEntryIndex = this.numberOfEntries - 1;
+        if (this.currentEntryIndex <= 0) {
+            this.currentEntryIndex = 0;
         }
         indexField.setText((this.currentEntryIndex + 1) + "");
         displayCurrentStaff(this.currentEntryIndex);
@@ -521,7 +531,7 @@ public class Controller {
         try {
             staffArrayList = staffQueries.getAllStaff();
             numberOfEntries = staffArrayList.size();
-            statusLabel.setText("Connected to the database");
+           // statusLabel.setText("Connected to the database");
 
             if (numberOfEntries != 0) {
                 currentEntryIndex = 0;
@@ -586,6 +596,7 @@ public class Controller {
         saveChangesButton.setDisable(true);
         saveButton.setDisable(true);
         cancelButton.setDisable(true);
+        cancelButton.setText("Cancel");
 
         // Date of Birth picker field
         datePickerField.setVisible(false);
@@ -614,6 +625,15 @@ public class Controller {
 
         fullTimeDropDown.setVisible(false);
         fullTimeDropDown.setDisable(true);
+
+        //# Data Fields set editable to false
+        firstNameField.setEditable(false);
+        lastNameField.setEditable(false);
+        dateOfBirthField.setEditable(false);
+        departmentField.setEditable(false);
+        salaryField.setEditable(false);
+        startDateField.setEditable(false);
+        fullTimeField.setEditable(false);
 
         // Status fields
         statusLabel.setTextFill(Color.BLACK);
@@ -675,5 +695,31 @@ public class Controller {
         }
 
         return datePickerValue;
+    }
+
+    private LocalDate stringToDate(String date)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        LocalDate localDate = LocalDate.parse(date, formatter);
+
+        return localDate;
+    }
+
+    private int getComboBoxIndex(String item, ComboBox comboBox)
+    {
+        int i = 0;
+
+        while(i < comboBox.getItems().size())
+        {
+            if(item.equals(comboBox.getItems().get(i)))
+            {
+                break;
+            }
+            i++;
+        }
+
+        return i;
+
     }
 }
