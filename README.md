@@ -13,11 +13,13 @@ REQUIREMENTS:
 9. the save button should update the current record if it exists or insert a new record if now current record does not exist. (hint if staffID is blank then it is a new record, if not you are updating an existing record).
 10. add about 10 entries to the database.
 
-FUNCTIONALITIES:
+FUNCTIONALITIES MEET:
 ---------------------
 1. ADD NEW STAFF TO THE DATABASE
 2. UPDATE A STAFF
 3. DISPLAY ALL STAFF FROM THE DATABASE
 4. ABLE TO SEARCH STAFF NAMES & DEPARTMENTS
+5. THE NEXT & PREVIOUS BUTTONS WORKING PROPERLY
+6. ABLE TO EDIT THE INDEX FIELD, AND WILL DISPLAY THE STAFF INFORMATION ACCOURDING TO THE INDEX FIELD
 
 
