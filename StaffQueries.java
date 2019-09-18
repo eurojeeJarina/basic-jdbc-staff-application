@@ -27,7 +27,7 @@ public class StaffQueries {
 
     private void connection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
 
             this.status = "Driver successfully loaded";
 

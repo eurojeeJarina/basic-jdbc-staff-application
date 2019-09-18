@@ -5,15 +5,15 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
-
 public class Controller {
 
-    private StaffQueries staffQueries;
+    private StaffQueries staffQueries; // instantiating a new StaffQueries object
     private Staff currentStaff; // staff currently displayed
     private ArrayList<Staff> staffArrayList; // all the staff we want to  display
     private int numberOfEntries; // number of entries in the arraylist
@@ -71,13 +71,18 @@ public class Controller {
 
     @FXML
     public void onButtonClicked(ActionEvent e) {
-        if (e.getSource().equals(browseAllBtn)) { // If browse all btn is clicked
-            displayStaff();
-        } else if (e.getSource().equals(nextBtn)) // If next btn is clicked
+        if (e.getSource().equals(browseAllBtn)) { // If browse all button is clicked
+
+            displayStaff(); // Call the displayStaff method.
+
+        } else if (e.getSource().equals(nextBtn)) // If next button is clicked
         {
-            nextStaff();
+            nextStaff(); // call the nextStaff method
+
         } else if (e.getSource().equals(previousBtn)) {
+
             previousStaff();
+
         } else if (e.getSource().equals(searchByNameBtn)) {
             if (searchByFirstNameField.getText().isEmpty()) {
                 System.out.println("Empty Field");
@@ -97,20 +102,15 @@ public class Controller {
 
         } else if (e.getSource().equals(updateButton)) {
             updateButtonHandler();
-            // System.out.println(this.currentStaff.getDateOfBirth());
-            // System.out.println(this.currentStaff.getStartDate());
-            //System.out.println(staffQueries.updateStaff(22, "Alex", "Byrne", "13/12/1993", "Accounts",  10000f,"10/12/2013",false));
 
         } else if (e.getSource().equals(saveButton)) {
-
+            // ADD NEW STAFF BUTTON
             addNewStaff(areFieldsValid());
-            //System.out.println(dateFormatter(this.startDatePickerField.getValue()));
 
+        } else if (e.getSource().equals(saveChangesButton)) {
+            updateStaff(areFieldsValid());
 
-        } else if (e.getSource().equals(saveChangesButton)){
-                updateStaff(areFieldsValid());
-
-        }else if (e.getSource().equals(cancelButton)) {
+        } else if (e.getSource().equals(cancelButton)) {
             resetControls();
             displayStaff();
         }
@@ -315,7 +315,8 @@ public class Controller {
                 dateFormatter(this.startDatePickerField.getValue()) == null ||
                 salaryField.getText().isEmpty() ||
                 fullTimeDropDown.getValue() == null) {
-
+            statusLabel.setTextFill(Color.RED);
+            statusLabel.setText("Missing fields");
 
             return false;
 
@@ -337,14 +338,11 @@ public class Controller {
         }
     }
 
-    private void updateStaff(boolean isValid)
-    {
-        if(!isValid)
-        {
+    private void updateStaff(boolean isValid) {
+        if (!isValid) {
             statusLabel.setTextFill(Color.RED);
             statusLabel.setText("Unable to save changes.");
-        }else
-        {
+        } else {
             double salary = Double.parseDouble(salaryField.getText());
             boolean isFullTime = Boolean.parseBoolean(fullTimeDropDown.getValue().toString());
 
@@ -357,12 +355,10 @@ public class Controller {
                     dateFormatter(this.startDatePickerField.getValue()),
                     isFullTime);
 
-            if(!isUpdate)
-            {
+            if (!isUpdate) {
                 statusLabel.setTextFill(Color.RED);
                 statusLabel.setText("Unable to save changes.");
-            }else
-            {
+            } else {
                 statusLabel.setTextFill(Color.GREEN);
                 statusLabel.setText("Successfully saved changes.");
                 saveChangesButton.setDisable(true);
@@ -374,7 +370,7 @@ public class Controller {
     private void addNewStaff(boolean isValid) {
 
         if (!isValid) {
-            System.out.println("missing");
+            System.out.println("false");
         } else {
 
             addNewStaff(firstNameField.getText(),
@@ -419,10 +415,9 @@ public class Controller {
 
             //System.out.println(numberOfEntries);
 
-            if(staffArrayList == null)
-            {
+            if (staffArrayList == null) {
                 displayStaff();
-            }else{
+            } else {
                 numberOfEntries = staffArrayList.size();
             }
 
@@ -488,7 +483,7 @@ public class Controller {
             // if the currentEntryIndex have reached the max number of entries
             // subtract 1 from it to avoid the out of bounds exception
             // and then disable the next button;
-            this.currentEntryIndex = this.numberOfEntries-1;
+            this.currentEntryIndex = this.numberOfEntries - 1;
 
         }
 
@@ -512,7 +507,7 @@ public class Controller {
         try {
             staffArrayList = staffQueries.getAllStaff();
             numberOfEntries = staffArrayList.size();
-           // statusLabel.setText("Connected to the database");
+            // statusLabel.setText("Connected to the database");
 
             if (numberOfEntries != 0) {
                 currentEntryIndex = 0;
@@ -678,22 +673,18 @@ public class Controller {
         return datePickerValue;
     }
 
-    private LocalDate stringToDate(String date)
-    {
+    private LocalDate stringToDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         return LocalDate.parse(date, formatter);
 
     }
 
-    private int getComboBoxIndex(String item, ComboBox comboBox)
-    {
+    private int getComboBoxIndex(String item, ComboBox comboBox) {
         int i = 0;
 
-        while(i < comboBox.getItems().size())
-        {
-            if(item.equalsIgnoreCase(comboBox.getItems().get(i).toString()))
-            {
+        while (i < comboBox.getItems().size()) {
+            if (item.equalsIgnoreCase(comboBox.getItems().get(i).toString())) {
                 break;
             }
             i++;
