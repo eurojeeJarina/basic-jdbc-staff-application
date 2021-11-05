@@ -7,9 +7,10 @@ import java.util.ArrayList;
 public class StaffQueries {
 
 
-    private static final String _URL = "jdbc:mysql://localhost:3306/iactproject";
-    private static final String _USER = "root";
-    private static final String _PASSWORD = "";
+   // private static final String _URL = "jdbc:mysql://localhost:3306/iactproject";
+    private static final String _URL = "jdbc:sqlserver://localhost\\sqlexpress";
+    private static final String _USER = "sa";
+    private static final String _PASSWORD = "blank";
 
     private static Connection conn;
     private static PreparedStatement browseAll;
@@ -27,37 +28,38 @@ public class StaffQueries {
 
     private void connection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+          //  Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
             this.status = "Driver successfully loaded";
 
-            final String _SELECTALL = "SELECT * FROM staff1"; // select entire table
+            final String _SELECTALL = "SELECT * FROM iactproject.dbo.Staff1"; // select entire table
 
-            final String _SEARCHQUERY = "SELECT * FROM staff1 WHERE " +
+            final String _SEARCHQUERY = "SELECT * FROM iactproject.dbo.Staff1 WHERE " +
                     "UPPER(FirstName) LIKE UPPER(?) OR " +
                     "UPPER(LastName) LIKE UPPER(?)";
 
-            final String _SEARCHDEPTQUERY = "SELECT * FROM staff1 " +
+            final String _SEARCHDEPTQUERY = "SELECT * FROM iactproject.dbo.Staff1 " +
                     "WHERE UPPER(Department) LIKE UPPER(?)";     // search if FirstName = '' OR LastName='' OR Department=''
 
-            final String _INSERTQUERY = "INSERT INTO staff1" +
+            final String _INSERTQUERY = "INSERT INTO iactproject.dbo.Staff1" +
                     "(FirstName, LastName, DateOfBirth,Department,Salary,StartDate,Fulltime)" +
                     "VALUES (?,?,?,?,?,?,?)";
 
-//            final String _DELETEQUERY = "DELETE FROM staff1 " +
+//            final String _DELETEQUERY = "DELETE FROM iactproject.dbo.Staff1 " +
 //                    "WHERE StaffId=(?)";
 
-            final String _FINDQUERY = "SELECT * FROM staff1 WHERE " +
+            final String _FINDQUERY = "SELECT * FROM iactproject.dbo.Staff1 WHERE " +
                     "UPPER(FirstName) LIKE UPPER(?) AND " +
                     "UPPER(LastName) LIKE UPPER(?)";
 
-            final String _UPDATEQUERY = "UPDATE staff1 " +
+            final String _UPDATEQUERY = "UPDATE iactproject.dbo.Staff1 " +
                     "SET FirstName= (?), LastName = (?), DateOfBirth = (?), Department = (?), Salary = (?), StartDate = (?), Fulltime = (?)" +
                     "WHERE StaffId = (?)";
 
             //establish a connection to the database
             conn = DriverManager.getConnection(_URL, _USER, _PASSWORD);
-            //System.out.println("Connection to database successful!");
+            System.out.println("Connection to database successful!");
             this.status = "Connected to the database";
 
             browseAll = conn.prepareStatement(_SELECTALL);
